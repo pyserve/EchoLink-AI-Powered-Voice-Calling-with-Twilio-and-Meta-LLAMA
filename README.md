@@ -44,7 +44,11 @@ providing a robust platform for interactive and intelligent voice interactions.*
 - Copy the ngrok domain url inside settings.py in project folder  
 - Copy the ngrok full url into the voice configuration > Request Url inside the TwiML App
   
-- Run the project's web server `python manage.py runserver`  
+- Run the project's web server `python manage.py runserver`
+
+  ![image](https://github.com/user-attachments/assets/3b84254d-b95b-456f-a11e-e65dfc576520)
+  
+
 - Call your Twilio number from a registered number.  
 
 ## References and Documentation Links  
