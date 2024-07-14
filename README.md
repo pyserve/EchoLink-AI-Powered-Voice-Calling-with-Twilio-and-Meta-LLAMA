@@ -46,8 +46,8 @@ providing a robust platform for interactive and intelligent voice interactions.*
 - Call your Twilio number from a registered number.  
 
 ## References and Documentation Links  
-[https://www.twilio.com/docs/usage/api](url)
-[https://docs.vocode.dev/welcome](url)
-[https://ngrok.com/docs/](url)
-[https://docs.djangoproject.com/en/5.0/](url)
-[https://huggingface.co/docs](url)
+[https://www.twilio.com/docs/usage/api](url)  
+[https://docs.vocode.dev/welcome](url)  
+[https://ngrok.com/docs/](url)  
+[https://docs.djangoproject.com/en/5.0/](url)  
+[https://huggingface.co/docs](url)  
