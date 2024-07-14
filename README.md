@@ -41,8 +41,8 @@ providing a robust platform for interactive and intelligent voice interactions.*
 
   ![image](https://github.com/user-attachments/assets/3d7cff19-d36c-4c88-91b7-8efff40c6346)
 
-- Copy the ngrok domain url inside settings.py in project folder  
-- Copy the ngrok full url into the voice configuration > Request Url inside the TwiML App
+- Copy the ngrok domain url (xxxxxxx-xxx-x.ngrok-free.app) inside settings.py in project folder  
+- Copy the ngrok full url (https://xxxxxxx-xxx-x.ngrok-free.app/voice/) into the voice configuration > Request Url inside the TwiML App
   
 - Run the project's web server `python manage.py runserver`
 
