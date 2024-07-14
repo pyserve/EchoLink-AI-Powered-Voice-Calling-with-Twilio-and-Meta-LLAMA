@@ -6,7 +6,7 @@ from huggingface_hub import InferenceClient
 import nltk
 from nltk.tokenize import sent_tokenize
 
-# using Facebook Meta-LLMA large language model for chat reply.
+# using Facebook Meta-LLMA large language model for call reply.
 model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
 client = InferenceClient(model=model_name, token=settings.HUGGINGFACE_TOKEN)
 
@@ -28,16 +28,17 @@ def VoiceProcesser(request):
         speech = ''
         if request.POST.get('SpeechResult', ""):
             speech = request.POST['SpeechResult']
-            reply = client.text_generation(speech)
-            # tokenizing sentences to reply short answers
-            tokenized_replies = sent_tokenize(reply)
-            if len(tokenized_replies) > 1:
-                reply = tokenized_replies[0] + tokenized_replies[1]
-            if len(tokenized_replies) == 1:
-                reply = tokenized_replies[0]
+            reply = ''
+            for message in client.chat_completion(
+                    messages=[{"role": "user", "content": speech}],
+                    max_tokens=500,
+                    stream=True,
+                ):
+                reply += message.choices[0].delta.content + ""
+
             gather = Gather(input='speech', action=f'https://{settings.NGROK_URL}/process/', timeout=4)
-            gather.say(reply)
             response.append(gather)
+            gather.say(reply)
             response.say("We didn't receive any input. Goodbye!")
             return HttpResponse(str(response), content_type='text/xml')
         
