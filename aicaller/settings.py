@@ -6,7 +6,7 @@ DEBUG = True
 
 HUGGINGFACE_TOKEN = "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"
 
-NGROK_URL = 'f972-2607-fea8-34a1-500-9bc-c311-c86e-e5d8.ngrok-free.app'
+NGROK_URL = '3fd9-70-28-52-210.ngrok-free.app'
 ALLOWED_HOSTS = [NGROK_URL, '127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
