@@ -1,5 +1,9 @@
 from pathlib import Path
+import os
+import sys
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(os.path.join(BASE_DIR, 'aicaller'))
 
 SECRET_KEY = "django-insecure-#n+(li_)zj2l&6fekaqkr0fn@2-(_tc8@&cuz0^b*etkw0w6ps"
 DEBUG = True
@@ -17,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "channels",
+    "aicaller.apps.AicallerConfig",
 ]
 
 MIDDLEWARE = [

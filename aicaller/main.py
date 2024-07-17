@@ -1,6 +1,0 @@
-# response = VoiceResponse()
-# connect = Connect()
-# connect.stream(url=f'wss://{settings.NGROK_URL}/audiostream/', name="Twilio Streaming", track="inbound_track")
-# response.append(connect)
-# response.say('This TwiML instruction is unreachable unless the Stream is ended by your WebSocket server.')
-# return HttpResponse(str(response), content_type='text/xml')

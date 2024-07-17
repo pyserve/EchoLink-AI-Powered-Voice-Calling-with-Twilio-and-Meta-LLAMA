@@ -56,10 +56,10 @@ class Lead(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=50, blank=True, null=True)
     state = models.CharField(max_length=50, blank=True, null=True)
-    interested = models.CharField(max_length=100, choices=SERVICE_CHOICES)
-    lead_source = models.CharField(max_length=100, choices=LEAD_SOURCE_CHOICES)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True)
+    interested = models.CharField(max_length=100, choices=SERVICE_CHOICES)
+    lead_source = models.CharField(max_length=100, choices=LEAD_SOURCE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
