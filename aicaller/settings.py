@@ -39,7 +39,7 @@ ROOT_URLCONF = "aicaller.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [Path.joinpath(BASE_DIR, "aicaller/templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

@@ -1,10 +1,13 @@
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views import View
+from .models import Lead, Appointment, SalesAgent, VoiceChat, VoiceMessage
+from .serializers import UserSerializer, LeadSerializer
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from twilio.twiml.voice_response import VoiceResponse, Connect, Gather
 from django.conf import settings
 from huggingface_hub import InferenceClient
-import nltk
-from nltk.tokenize import sent_tokenize
 
 # using Facebook Meta-LLMA large language model for call reply.
 model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
@@ -12,9 +15,9 @@ client = InferenceClient(model=model_name, token=settings.HUGGINGFACE_TOKEN)
 
 # Function to handle the incoming calls at the first time.
 @csrf_exempt
-def VoiceHandler(request):
+def IncomingCallHandler(request):
     response = VoiceResponse()
-    gather = Gather(input='speech', action=f'https://{settings.NGROK_URL}/process/', timeout=3)
+    gather = Gather(input='speech', action=f'https://{settings.NGROK_URL}/inbounds-process/', timeout=3)
     gather.say('Welcome to Weaver Eco Home, please tell us why you\'re calling')
     response.append(gather)
     response.say("We didn't receive any input. Goodbye!")
@@ -22,7 +25,7 @@ def VoiceHandler(request):
 
 # Function to handle the call processing
 @csrf_exempt
-def VoiceProcesser(request):
+def IncomingCallProcessor(request):
     if request.method == "POST":
         prompt = ''
         if "prompt" not in request.session:
@@ -57,3 +60,14 @@ def VoiceProcesser(request):
         
     response.say("Sorry! something went wrong. We will contact you back soon.")
     return HttpResponse(str(response), content_type='text/xml')
+
+@csrf_exempt
+def OutgoingCallHandler(request, id=None):
+    if id is not None:
+        lead = Lead.objects.get(pk=id)
+        lead = LeadSerializer(lead)
+    return JsonResponse({"data": lead})
+
+@csrf_exempt
+def OutgoingCallProcessor(request, id=None):
+    return JsonResponse({"data": ""})

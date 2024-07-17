@@ -79,15 +79,15 @@ class Appointment(models.Model):
     
 class VoiceChat(models.Model):
     lead = models.ForeignKey('Lead', on_delete=models.CASCADE, related_name='voice_chats')
-    ai_caller = models.CharField(max_length=100)
+    ai_caller = models.CharField(max_length=100, blank=True, null=True)
     start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    end_time = models.DateTimeField(blank=True, null=True)
     CALL_TYPES = [
         ('inbound', 'Inbound'),
         ('outbound', 'Outbound'),
     ]
     call_type = models.CharField(max_length=50, choices=CALL_TYPES)
-    duration_seconds = models.PositiveIntegerField()
+    duration_seconds = models.PositiveIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -101,6 +101,7 @@ class VoiceMessage(models.Model):
     voice_chat = models.ForeignKey(VoiceChat, on_delete=models.CASCADE, related_name='messages')
     role = models.CharField(max_length=20)  # 'user' or 'assistant'
     content = models.TextField()
+    session_id = models.CharField(max_length=100)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
