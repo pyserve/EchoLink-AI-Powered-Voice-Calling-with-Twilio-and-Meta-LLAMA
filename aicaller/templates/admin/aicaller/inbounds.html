@@ -1,0 +1,98 @@
+{% extends "admin/aicaller/base.html" %}
+
+{% block links %}
+<script type="text/html" src="twilio.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+#root{
+    font-family: "Roboto", sans-serif;
+}
+</style>
+<script>
+    $(() =>{
+        var start_time = new Date();
+        $("#start_time").html(start_time.toLocaleTimeString());
+        var end_time = null;
+        let statusCallback = null;
+
+        const getElapsedTime = () => {
+            let current_time = new Date();
+            let elapsed_time = current_time - start_time; 
+            let hours = Math.floor(elapsed_time / (1000 * 60 * 60));
+            let minutes = Math.floor((elapsed_time % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((elapsed_time % (1000 * 60)) / 1000);
+            let timeString = `${hours.toString().padStart(2, '0')} : ${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
+            return timeString;
+        }
+
+        const fetchCallStatus = async () => {
+            const callSid = $("#callId").val();
+            const twilio_account_sid = $('#sid').val();
+            const twilio_auth_token = $('#token').val();
+            fetch(`https://api.twilio.com/2010-04-01/Accounts/${twilio_account_sid}/Calls/${callSid}.json`, {
+                headers: {
+                    Authorization: 'Basic ' + btoa(`${twilio_account_sid}:${twilio_auth_token}`),
+                },
+                method: "GET"
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                $("#status").html(data.status);
+                $("#call_time").html(getElapsedTime());
+                $("#from").html(data.from);
+                if(data.status === "completed"){
+                    clearInterval(statusCallback);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        statusCallback = setInterval(() => {
+            fetchCallStatus();
+        }, 1000);
+
+
+    })
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4" id="root">
+    <div class="position-absolute top-50 start-50 translate-middle">
+        <div class="card border  shadow-lg" style="width: 450px;">
+            <ul class="list-group p-0">
+                <li class="list-group-item py-2 d-flex align-items-center justify-content-between bg-success text-light">
+                    <div class="fs-5"><i class="fa-solid fa-phone-volume"></i> AI Caller - Incoming Call</div>
+                    <div class="fw-normal text-capitalize d-flex align-items-center">
+                        <i class="fa-solid fa-signal me-1"></i> 
+                        <span class="" id="status">Connected</span>
+                    </div>
+                </li>
+                <li class="list-group-item p-2 text-capitalize">
+                    <span class="me-3">From: </span>
+                    <span class="fw-bold p-2 badge bg-primary" id="from">fetching...</span>
+                </li>
+                <li class="list-group-item p-2 text-capitalize">
+                    <span class="me-3">Start Time: </span>
+                    <span class="fw-bold p-2 badge bg-secondary" id="start_time"></span>
+                </li>
+                <li class="list-group-item p-2 text-capitalize">
+                    <span class="me-3">Call Time: </span>
+                    <span class="fw-bold p-2 badge bg-success" id="call_time">00 : 00 : 00</span>
+                </li>
+            </ul>
+        </div>
+        <div class="d-none">
+            <form>
+                <input type="text" id="sid" value="{{twilio_account_sid}}">
+                <input type="text" id="token" value="{{twilio_auth_token}}">
+                <input type="text" id="callId" value="{{callId}}">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,12 +1,10 @@
 from django.contrib import admin
 from django.urls import path
-from .views import IncomingCallHandler, IncomingCallProcessor, OutgoingCallHandler, OutgoingCallProcessor
+from .views import InboundCalls, OutboundsCalls
 from .consumers import AudioStreamConsumer
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("inbounds/", IncomingCallHandler, name="incoming_calls"),
-    path("inbounds-process/", IncomingCallProcessor, name="incoming_processor"),
-    path("outbounds/<int:id>", OutgoingCallHandler, name="outgoing_calls"),
-    path("outbounds-process/", OutgoingCallProcessor, name="outgoing_processor"),
+    path("inbounds/", InboundCalls.as_view(), name="incoming_calls"),
+    path("outbounds/<int:id>", OutboundsCalls.as_view(), name="outgoing_calls"),
 ]
