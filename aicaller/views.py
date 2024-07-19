@@ -102,14 +102,13 @@ class OutboundsCalls(View):
         call_sid = None
         if id is not None:
             lead = Lead.objects.get(pk=id)
-            phone = lead.phone_number
             client = Client(twilio_account_sid, twilio_auth_token)
             call = client.calls.create(
                 method="POST",
                 url=f'{settings.BASE_URL}/outbounds/{id}',
                 # status_callback="https://127.0.0.1:8000/callback",
                 # status_callback_method="POST",
-                to=phone,
+                to=lead.phone_number,
                 from_=settings.TWILIO_PHONE_NUMBER,
             )
             call_sid = call.sid
