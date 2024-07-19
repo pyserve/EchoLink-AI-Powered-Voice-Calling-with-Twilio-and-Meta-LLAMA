@@ -37,7 +37,7 @@ providing a robust platform for interactive and intelligent voice interactions.*
 - Open a command terminal inside this directory.  
 - Run `pip install -r requirements.txt`
   
-- Run Ngrok server `ngrok http 800` > must point to same address or port used by the web server
+- Run Ngrok server `ngrok http 8000` > must point to same address or port used by the web server
 
   ![image](https://github.com/user-attachments/assets/3d7cff19-d36c-4c88-91b7-8efff40c6346)
 
