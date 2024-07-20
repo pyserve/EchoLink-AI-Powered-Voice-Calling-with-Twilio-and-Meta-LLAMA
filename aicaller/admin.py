@@ -14,14 +14,26 @@ class LeadAdmin(admin.ModelAdmin):
         )
     call_lead.short_description = 'Action'
 
-class VoiceChatAdmin(admin.ModelAdmin):
+class VoiceCallAdmin(admin.ModelAdmin):
     list_display = ["call_id","start_time", "ai_caller","call_type", "created_at"]
 
 class VoiceMessageAdmin(admin.ModelAdmin):
-    list_display = ["call_id","role", "content","timestamp"]
+    list_display = ["call_id","voice_call", "call_type" ,"role", "content","timestamp"]
+
+    def voice_call(self, obj):
+        return obj.voice_chat.__str__()
+    
+    def call_type(self, obj):
+        return obj.voice_chat.call_type
+    
+class SalesAgentAdmin(admin.ModelAdmin):
+    list_display = ["user","full_name", "shift_start_time", "shift_end_time", "created_at", "updated_at"]
+
+    def full_name(self, obj):
+        return obj.user.first_name + " " + obj.user.last_name
 
 admin.site.register(Lead, LeadAdmin)
-admin.site.register(SalesAgent)
+admin.site.register(SalesAgent, SalesAgentAdmin)
 admin.site.register(Appointment)
-admin.site.register(VoiceChat, VoiceChatAdmin)
+admin.site.register(VoiceCall, VoiceCallAdmin)
 admin.site.register(VoiceMessage, VoiceMessageAdmin)

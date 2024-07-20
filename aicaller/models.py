@@ -77,7 +77,7 @@ class Appointment(models.Model):
     def __str__(self):
         return f"{self.lead} - Appointment on {self.appointment_date}"
     
-class VoiceChat(models.Model):
+class VoiceCall(models.Model):
     lead = models.ForeignKey('Lead', on_delete=models.CASCADE, related_name='voice_chats', null=True)
     ai_caller = models.CharField(max_length=100, blank=True, null=True)
     start_time = models.DateTimeField()
@@ -93,18 +93,18 @@ class VoiceChat(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        lead_info = f"{self.lead} with " if self.lead else f"New Lead - {self.created_at}"
-        return f"VoiceChat {self.call_id} ({lead_info} with {self.ai_caller})"
+        lead_info = f"{self.lead} with " if self.lead else f"New Lead - {self.created_at.date()}"
+        return f"VoiceCall ({lead_info} with {self.ai_caller})"
 
     class Meta:
         ordering = ['-start_time']
 
 class VoiceMessage(models.Model):
-    voice_chat = models.ForeignKey(VoiceChat, on_delete=models.CASCADE, related_name='messages')
+    voice_chat = models.ForeignKey(VoiceCall, on_delete=models.CASCADE, related_name='messages')
     role = models.CharField(max_length=20)  # 'user' or 'assistant'
     content = models.TextField()
     call_id = models.CharField(max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.role}: {self.content} ({self.timestamp})"
+        return f"{self.role}: {self.call_id} ({self.timestamp})"
