@@ -49,7 +49,7 @@ providing a robust platform for interactive and intelligent voice interactions.*
   ![image](https://github.com/user-attachments/assets/3b84254d-b95b-456f-a11e-e65dfc576520)
   
 
-- Call your Twilio number from a registered number.  
+- Call your Twilio number from a registered number (must be listed in verified caller in Twilio).
 
 ## References and Documentation Links  
 [https://www.twilio.com/docs/usage/api](url)  
