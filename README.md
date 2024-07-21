@@ -12,7 +12,7 @@ providing a robust platform for interactive and intelligent voice interactions.*
 ## Configuration
 **Step 1: Setup Django project:** `pip install django`  
 
-**Step 2: Install Ngrok server:** `pip install ngrok`  
+**Step 2: Install Ngrok server:** `pip install ngrok` or download ngrok.exe file and install
 
 **Step 3: Create a Twilio Account and Set up an TwiML App:**  
 
