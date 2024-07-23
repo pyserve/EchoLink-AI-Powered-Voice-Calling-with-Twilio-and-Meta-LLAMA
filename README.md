@@ -12,7 +12,7 @@ providing a robust platform for interactive and intelligent voice interactions.*
 ## Configuration
 **Step 1: Setup Django project:** `pip install django`  
 
-**Step 2: Install Ngrok server:** `pip install ngrok`  
+**Step 2: Install Ngrok server:** `pip install ngrok` or download ngrok.exe file and install
 
 **Step 3: Create a Twilio Account and Set up an TwiML App:**  
 
@@ -49,7 +49,7 @@ providing a robust platform for interactive and intelligent voice interactions.*
   ![image](https://github.com/user-attachments/assets/3b84254d-b95b-456f-a11e-e65dfc576520)
   
 
-- Call your Twilio number from a registered number.  
+- Call your Twilio number from a registered number (must be listed in verified caller in Twilio).
 
 ## References and Documentation Links  
 [https://www.twilio.com/docs/usage/api](url)  
