@@ -46,7 +46,7 @@ class InboundCalls(View):
                 customer support. Weaver Eco Home is an HVAC company that sells heat pump, 
                 air conditioner, and so on. Please access the website for this company hosted at 
                 https://www.weaverecohome.ca/ for more information. Please act the way to provide
-                customer support asking them about problems.\n
+                customer support asking them about problems. Only reply in two sentences.\n
             """
         }
         CallSid = request.POST.get("CallSid")
