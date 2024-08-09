@@ -51,6 +51,11 @@ providing a robust platform for interactive and intelligent voice interactions.*
 
 - Call your Twilio number from a registered number (must be listed in verified caller in Twilio).
 
+![image](https://github.com/user-attachments/assets/8ea7e889-fae9-4c53-a99b-e2ae7b7f0c32)
+
+![image](https://github.com/user-attachments/assets/0e9512a2-27ab-46a9-83ba-68dff7715033)
+
+
 ## References and Documentation Links  
 [https://www.twilio.com/docs/usage/api](url)  
 [https://docs.vocode.dev/welcome](url)  
