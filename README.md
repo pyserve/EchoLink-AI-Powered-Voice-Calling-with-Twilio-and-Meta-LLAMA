@@ -51,9 +51,9 @@ providing a robust platform for interactive and intelligent voice interactions.*
 
 - Call your Twilio number from a registered number (must be listed in verified caller in Twilio).
 
-![image](https://github.com/user-attachments/assets/8ea7e889-fae9-4c53-a99b-e2ae7b7f0c32)
+![image](https://github.com/user-attachments/assets/e3173dee-ee91-4f57-8457-ea79845fbc7d)
 
-![image](https://github.com/user-attachments/assets/0e9512a2-27ab-46a9-83ba-68dff7715033)
+![image](https://github.com/user-attachments/assets/b1bc8849-2167-4ab6-a400-b4b2db276957)
 
 
 ## References and Documentation Links  
