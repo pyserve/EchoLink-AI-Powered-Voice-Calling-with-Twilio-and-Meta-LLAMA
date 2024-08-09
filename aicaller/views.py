@@ -16,9 +16,10 @@ from django.utils import timezone
 
 # using Facebook Meta-LLMA large language model for call reply.
 model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
+# model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 client = InferenceClient(model=model_name, token=settings.HUGGINGFACE_TOKEN)
 
-speaker_timeout = 3
+speaker_timeout = 5
 twilio_account_sid = settings.TWILIO_ACCOUNT_SID
 twilio_auth_token = settings.TWILIO_AUTH_TOKEN
 
@@ -26,7 +27,7 @@ twilio_auth_token = settings.TWILIO_AUTH_TOKEN
 class InboundCalls(View):
     def __init__(self):
         self.welcome_message = "Welcome to Weaver Eco Home, please tell us why you\'re calling?"
-        self.fallback_message = "We didn't receive any input. Goodbye!"
+        self.fallback_message = "We didn't receive any input. Thank you for Calling Weaver Eco Home. Have a good day and Goodbye!"
         self.closing_message = "Thank you for calling today! Enjoy your rest of the day."
         
     def get(self, request):
@@ -72,7 +73,7 @@ class InboundCalls(View):
             reply = ''
             for message in client.chat_completion(
                     messages=[prompt, *all_messages, {"role": "user", "content": speech}],
-                    max_tokens=60,
+                    max_tokens=120,
                     stream=True,
                 ):
                 reply += message.choices[0].delta.content + ""
@@ -99,31 +100,12 @@ class InboundCalls(View):
         response.say(self.fallback_message)
         return HttpResponse(str(response), content_type='text/xml')
 
-    def intent_recognition(self, context):
-        prompt = f"""Act as an Intent Recognition Model to identify whether user intends
-            to book an appointment or not from the given context below.
-            Context: {context} \n
-            Please extract following \n
-            1. intent_of_call, 
-            2. like_to_book,
-            3. If like_to_book is True,  Extract Date_Time from context. \n
-            After that please prepare a dictionary with key value pairs to send back. 
-        """
-        reply = ''
-        for message in client.chat_completion(
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=60,
-                stream=True, 
-                # The model sends partial responses as they are generated, 
-                # rather than waiting to send the entire response at once.
-            ):
-            reply += message.choices[0].delta.content or ""
-        print((reply))
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class OutboundsCalls(View):
     def __init__(self):
-        self.fallback_message = "We didn't receive any input. Goodbye!"
+        self.fallback_message = "We didn't receive any input. Thank you for Calling Weaver Eco Home. Have a good day and Goodbye!"
         self.closing_message = "Thank you for calling today! Enjoy your rest of the day."
 
     def get(self, request, id=None):
@@ -146,24 +128,21 @@ class OutboundsCalls(View):
             "twilio_auth_token": twilio_auth_token
         })
 
+    #prompt = Please ask about the size of their house, the type of gas they use, and the age of their furnace.
     def post(self, request, id=None):
         lead = Lead.objects.get(pk=id)
         system = {
-            "role": "system", 
-            "content": f"""You are an AI voice call assistant at Weaver Eco Home for the purpose of
-                booking an appointment for a customer or caller. Weaver Eco Home is an HVAC company
-                that sells heat pump, air conditioner, and so on. Please access the website for this
-                company hosted at https://www.weaverecohome.ca/ for more information.
-                Please act the way to book an appointment for customer asking them date time and purpose
-                of booking appointments.\n
-            """
+            "role":"system",
+            "content": f"""You are an AI voice call assistant at Weaver Eco Home, 
+            making outbound calls for customer support. Weaver Eco Home is an HVAC company 
+            that sells heat pumps, air conditioners, and more. You are calling {lead.first_name}, 
+            a potential customer who inquired about heat pump.  Push the client to book an appointment for a 
+            consultation based on available slots. Be conversational and cheerful. Keep responses short and up to two maximum sentences.\n"""
         }
         prompt = {
             "role": "assistant",
             "content": f"""
-                Hi! {lead.first_name}, I am calling you from Weaver Eco Home. 
-                I see you you are interested in {lead.interested}. Would you like to
-                book an appointment with one of our best sales agents to know more about it?
+                Hi! Am I speaking to {lead.first_name}? 
             """
         }
         CallSid = request.POST.get("CallSid")
@@ -204,6 +183,7 @@ class OutboundsCalls(View):
             response.append(gather)
             gather.say(reply)
             response.say(self.fallback_message)
+            self.intent_recognition(context= all_messages)
             return HttpResponse(str(response), content_type='text/xml')
             
         gather = Gather(
@@ -215,3 +195,30 @@ class OutboundsCalls(View):
         gather.say(prompt['content'])
         response.say(self.fallback_message)
         return HttpResponse(str(response), content_type='text/xml')
+
+    def intent_recognition(self, context):
+        current_date = timezone.now()
+
+        prompt = f"""
+            Analyze the entire conversation between the assistant and the
+            user to identify any booking intent. 
+            Determine the appointment time relative to the current date which is {current_date}.
+            Provide the results in the following only JSON formatted string, nothing else:
+
+            "intent": "booking",
+            "appointment_time": "YYYY-MM-DDTHH:MM:SSZ"
+
+            Make sure the `appointment_time` is accurate and based on the user's intent and context from the conversation.
+            context = {context}
+            """
+        
+        reply = ''
+        for message in client.chat_completion(
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=500,
+                stream=True, 
+                # The model sends partial responses as they are generated, 
+                # rather than waiting to send the entire response at once.
+            ):
+            reply += message.choices[0].delta.content or ""
+        print((reply))
