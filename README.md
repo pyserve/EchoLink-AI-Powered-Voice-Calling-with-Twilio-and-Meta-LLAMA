@@ -1,4 +1,4 @@
-# EchoLink-AI-Powered-Voice-Calling-with-Twilio-and-Meta-LLAMA
+# EchoLink-AI-Powered-Voice-Calling-with-Twilio-and-Meta-LLAMA3.0
 *EchoLink is an AI-powered voice calling system leveraging Django, Twilio, and Meta LLAMA. It enables seamless voice communication 
 by integrating natural language processing capabilities from HuggingFace with Twilio's telephony services, 
 providing a robust platform for interactive and intelligent voice interactions.*
