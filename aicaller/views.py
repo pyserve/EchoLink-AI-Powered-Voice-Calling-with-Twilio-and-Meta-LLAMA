@@ -71,12 +71,8 @@ class InboundCalls(View):
             messages = VoiceMessage.objects.filter(voice_chat = call)
             all_messages = [{"role": message.role, "content": message.content} for message in messages]
             reply = ''
-            for message in client.chat_completion(
-                    messages=[prompt, *all_messages, {"role": "user", "content": speech}],
-                    max_tokens=120,
-                    stream=True,
-                ):
-                reply += message.choices[0].delta.content + ""
+            res = client.chat_completion(messages=all_messages, max_tokens=1024)
+            reply = res.choices[0].message.content
             message = VoiceMessage.objects.create(
                 voice_chat=call, role="assistant", content=reply, call_id=CallSid
             )
@@ -166,12 +162,8 @@ class OutboundsCalls(View):
             messages = VoiceMessage.objects.filter(voice_chat = call)
             all_messages = [{"role": message.role, "content": message.content} for message in messages]
             reply = ''
-            for message in client.chat_completion(
-                    messages=[system, prompt, *all_messages, {"role": "user", "content": speech}],
-                    max_tokens=50,
-                    stream=True,
-                ):
-                reply += message.choices[0].delta.content + ""
+            res = client.chat_completion(messages=all_messages, max_tokens=1024)
+            reply = res.choices[0].message.content
             message = VoiceMessage.objects.create(
                 voice_chat=call, role="assistant", content=reply, call_id=CallSid
             )
@@ -213,12 +205,9 @@ class OutboundsCalls(View):
             """
         
         reply = ''
-        for message in client.chat_completion(
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=500,
-                stream=True, 
-                # The model sends partial responses as they are generated, 
-                # rather than waiting to send the entire response at once.
-            ):
-            reply += message.choices[0].delta.content or ""
+        response = client.chat_completion(
+            messages=[{"role": "user", "content": prompt}], 
+            max_tokens=1024
+        )
+        reply = response.choices[0].message.content
         print((reply))
